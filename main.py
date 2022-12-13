@@ -1,30 +1,24 @@
-import subprocess
-import wolframalpha
-import pyttsx3
-import json
-import random
-import operator
-import speech_recognition as sr
-import datetime
-import wikipedia
-import webbrowser
-import os
-import winshell
-import pyjokes
-import pywhatkit
-import feedparser
-import secure_smtplib
 import ctypes
-import time
-import requests
+import datetime
+import json
+import os
 import shutil
-from twilio.rest import Client
+import subprocess
+import time
+import webbrowser
+from urllib.request import urlopen
+import pyaudio
+import pyjokes
+import pyttsx3
+import pywhatkit
+import requests
+import speech_recognition as sr
+import wikipedia
+import winshell
+import wolframalpha
 from clint.textui import progress
 from ecapture import ecapture as ec
-from bs4 import BeautifulSoup
-import win32com.client as wincl
-from urllib.request import urlopen
-
+from twilio.rest import Client
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -38,18 +32,18 @@ def speak(audio):
 
 def wish_me():
     hour = int(datetime.datetime.now().hour)
-    if hour >= 0 and hour < 12:
+    if 0 <= hour < 12:
         speak("Good Morning Sir !")
 
-    elif hour >= 12 and hour < 18:
+    elif 12 <= hour < 18:
         speak("Good Afternoon Sir !")
 
     else:
         speak("Good Evening Sir !")
 
-    assname = "Jarvis 0 point 1"
+    ask_name = "Black Bolt"
     speak("I am your Assistant")
-    speak(assname)
+    speak(ask_name)
 
 
 def username():
@@ -66,27 +60,21 @@ def username():
 
 
 def take_command():
-    r = sr.Recognizer()
-
+    rr = sr.Recognizer()
     with sr.Microphone() as source:
-
         print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source)
-
+        rr.pause_threshold = 1
+        audio = rr.listen(source)
     try:
         print("Recognizing...")
-        query = r.recognize_google(audio, language='en-in')
-        print(f"User said: {query}\n")
-
+        command = rr.recognize_google(audio, language='en-in')
+        print(f"User said: {command}\n")
     except Exception as e:
         print(e)
         print("Unable to Recognize your voice.")
         return "None"
-
-    return query
-
-if _name_ == '_main_':
+    return command
+if __name__ == '__main__':
     clear = lambda: os.system('cls')
 
     clear()
@@ -149,13 +137,13 @@ if _name_ == '_main_':
 
         elif "change name" in query:
             speak("What would you like to call me, Sir ")
-            assname = take_command()
+            askname = take_command()
             speak("Thanks for naming me")
 
         elif "what's your name" in query or "What is your name" in query:
             speak("My friends call me")
-            speak(assname)
-            print("My friends call me", assname)
+            speak(askname)
+            print("My friends call me", askname)
 
         elif 'exit' in query:
             speak("Thanks for giving me your time")
@@ -260,7 +248,7 @@ if _name_ == '_main_':
             location = query
             speak("User asked to Locate")
             speak(location)
-            webbrowser.open("https://www.google.nl/maps/place/"+location+"")
+            webbrowser.open("https://www.google.nl/maps/place/" + location + "")
 
         elif "camera" in query or "take a photo" in query:
             ec.capture(0, "Jarvis Camera ", "img.jpg")
@@ -316,7 +304,6 @@ if _name_ == '_main_':
 
             wish_me()
             speak("Jarvis 1 point o in your service Mister")
-            speak(assname)
 
         elif "weather" in query:
 
@@ -351,9 +338,9 @@ if _name_ == '_main_':
 
             message = client.messages \
                 .create(
-            body=take_command(),
-            from_='Sender No',
-            to='Receiver No'
+                body=take_command(),
+                from_='Sender No',
+                to='Receiver No'
             )
 
             print(message.sid)
@@ -363,8 +350,6 @@ if _name_ == '_main_':
 
         elif "Good Morning" in query:
             speak("A warm" + query)
-            speak("How are you Mister")
-            speak(assname)
 
         elif "will you be my gf" in query or "will you be my bf" in query:
             speak("I'm not sure about, may be you should give me some time")
